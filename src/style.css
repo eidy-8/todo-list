@@ -1,9 +1,41 @@
 body {
-    text-align: center;
-    margin: 20px;
+    display: grid;
+    grid-template-rows: auto 1fr 5fr auto;
+    margin: 0;
+    min-height: 100vh;
 }
 
-h3 {
+header {
+    text-indent: 50px;
+    font-size: 50px;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+}
+
+button {
+    border-style: none;
+    background-color: transparent;
+}
+
+#myProject {
+    display: flex;
+    font-size: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+#itemsArea,
+#myProject,
+footer {
+    text-align: center;
+    align-self: center;
+}
+
+header, 
+footer {
     color: #333333;
     background: #f5f5f5;
     padding: 20px;

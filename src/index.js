@@ -1,7 +1,11 @@
 import "./style.css";
+import "./assets/plus.png";
 
-const title = document.createElement("h3");
-title.textContent = "Webpack made easy!";
-
-const page = document.querySelector("body");
-page.append(title);
+const toDoItem = function(title, description, dueDate, priority) {
+    this.title = title;
+    this.description = description;
+    this.dueDate = dueDate;
+    this.priority = priority;
+    this.notes = notes;
+    this.checkList = checkList;
+}
