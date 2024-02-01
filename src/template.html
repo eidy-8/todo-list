@@ -8,10 +8,18 @@
 <body>
     <header>Todo List Project</header>
     <div id="myProject">
-        <p>My Project</p>
+        <p>Create task</p>
         <button>
             <img src="./assets/plus.png" alt="Plus Button">
         </button>
+
+        <form onsubmit="return checkPassword()">
+            <div>
+                <label for="taskName"></label>
+                <input type="text" name="taskName" id="taskName" placeholder="Enter task's title here" required>
+            </div>
+        </form>
+
     </div>
     <div id="itemsArea">Items Area</div>
     <footer>Enrique Onaga</footer>
