@@ -19,7 +19,14 @@ img {
     height: 50px;
 }
 
-input {
+form {
+    margin-top: -30px;
+}
+
+#title,
+#description,
+#dueDate,
+#taskItem {
     font-size: 24px;
     border: none;
     -webkit-appearance: none;
@@ -34,34 +41,55 @@ input {
     margin-top: 20px;
 }
 
-#low {
-    color: green;
-}
-
-#medium {
-    color: yellow;
-}
-
+#low,
+#medium,
 #high {
-    color: red;
+    border: 2px solid #000; 
 }
 
 input[type="radio"].priority {
-    appearance: radio; 
+    display: none;
+}
+
+input[type="radio"].priority:checked + p {
+    color: white;
+    background-color: #000;
+    padding: 5px; 
 }
 
 #priorityOption {
     display: flex;
-    flex-direction: column;
-    margin-left: 150px;
-    margin-top: -30px;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    justify-content: space-around;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style-type: none;
+    margin-left: 105px;
 }
 
 label {
-    display: flex;
-    align-items: center;
-    width: 50px;
-    margin-bottom: -30px;
+    display: block;
+}
+
+.tasks {
+    margin-left: -5px;
+    appearance: none; 
+    width: 30px;
+    height: 30px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.tasks:checked {
+    background: radial-gradient(circle, black 0%, black 50%, white 50%, white 100%);
+    border: 2px solid black;
 }
 
 #description {
@@ -82,13 +110,38 @@ button {
     background-color: transparent;
 }
 
-#cancelButton,
-#saveButton {
+#saveButton,
+#clearButton {
     background-color: #f0eef1;
     border-radius: 50px 50px 50px 50px;
     border-style: none;
     width: 88px;
     height: 44px;
+}
+
+#delProjectButton {
+    background-color: #f0eef1;
+    color: red;
+    border-radius: 50px 50px 50px 50px;
+    border-style: none;
+    width: 88px;
+    height: 44px;
+}
+
+#closeButton {
+    display: flex;
+    background-color: #f0eef1;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 550px;
+}
+
+#xButton {
+    width: 30px;
+    height: 30px;
 }
 
 #buttons {
@@ -107,12 +160,18 @@ button {
 #itemsArea,
 #myProject,
 footer {
+    display: flex;
     text-align: center;
     align-self: center;
+    justify-content: center;
 }
 
 #task {
     display: flex;  
+}
+
+input#taskItem {
+    margin-bottom: 30px;
 }
 
 header, 

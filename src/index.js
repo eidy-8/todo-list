@@ -1,6 +1,6 @@
 import "./style.css";
 import "./assets/plus.png";
-import "./assets/circle-outline.png";
+import "./assets/alpha-x.png";
 
 const toDoItem = function(title, description, dueDate, priority) {
     this.title = title;
@@ -15,8 +15,9 @@ const projetos = [];
 
 //Popup logic
 const openDialogButton = document.getElementById('openDialogButton');
-const cancelButton = document.getElementById('cancelButton');
 const createTaskButton = document.getElementById('createTaskButton');
+const saveButton = document.getElementById("saveButton");
+const closeButton = document.getElementById('closeButton');
 
 openDialogButton.addEventListener('click', () => {
     const title = document.getElementById("title").value;
@@ -26,26 +27,45 @@ openDialogButton.addEventListener('click', () => {
         popup.showModal();
     }
 });
+
 createTaskButton.addEventListener('click', () => {
     const taskItem = document.getElementById("taskItem").value;
     if (taskItem !== "") {
-        const tasks = document.getElementById("tasks");
-        const task = document.createElement("div");
-        task.setAttribute("id", "task");
-        const taskTitle = document.createElement("div");
-        taskTitle.textContent = taskItem;
-        tasks.appendChild(task);
+        const ul = document.getElementById("tasksUl");
+        const li = document.createElement("li");
+        const input = document.createElement("input");
+        input.type = 'checkbox';
+        input.className = 'tasks';
+        const label = document.createElement("label");
+        label.textContent = taskItem;
 
-        const circleImg = document.createElement("img");
-        circleImg.setAttribute("id", "circleImg");
-        circleImg.src = "./assets/circle-outline.png";
-        circleImg.alt = "Check Button";
-
-        task.appendChild(circleImg);
-        task.appendChild(taskTitle);
+        ul.appendChild(li);
+        li.appendChild(input);
+        li.appendChild(label);
     }
 });
-cancelButton.addEventListener('click', () => {
+
+saveButton.addEventListener("click", () => {
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    const dueDate = document.getElementById("dueDate").value;
+    const priority = document.getElementsByClassName("priority");
+
+    let priorityValue;
+    for (const button of priority) {
+    if (button.checked) {
+        priorityValue = button.value;
+        break;
+    }
+    }
+    console.log(title);
+    console.log(description);
+    console.log(dueDate);
+    console.log(priorityValue);
+});
+
+closeButton.addEventListener('click', () => {
+    // document.getElementById("title").value = '';
     popup.close();
 });
 
