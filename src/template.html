@@ -16,7 +16,7 @@
 
         <form>
             <label for="title"></label>
-            <input type="text" name="title" id="title" placeholder="Enter project title here" required>   
+            <input type="text" name="title" id="title" placeholder="Enter project title here">   
         </form>
 
         <dialog id="popup">
@@ -74,13 +74,74 @@
 
             <div id="buttons">
                 <button id="saveButton">Save</button>
-                <button id="clearButton">Clear completed tasks</button>
-                <!-- <button id="delProjectButton">Delete Project</button> Deixarei este botao pra quando eu adicionar multiplas tarefas na task area-->
+                <button id="clearButton">Clear Completed Tasks</button>
             </div>
         </dialog>
     </div>
 
-    <div id="itemsArea"></div>
+    <dialog id="popupDetail">
+        <button id="closeButton">
+            <img id="xButton" src="./assets/alpha-x.png" alt="Alpha-X Button">
+        </button>
+        <div id="projectTitle"></div>
+
+        <p>Description:</p>
+        <div>
+            <label for="description"></label>
+            <input type="text" name="description" id="description" placeholder="Enter project description here" required>
+        </div>
+
+        <p>Due date:</p>
+        <div>
+            <label for="dueDate"></label>
+            <input type="date" name="dueDate" id="dueDate" required>
+        </div>
+
+        <p>Priority:</p>
+        <div id="priorityOption">
+            <label>
+              <input class="priority" id="low" type="radio" name="read" value="Low" required>
+              <p id="low">Low</p>
+            </label>
+            <label>
+              <input class="priority" id="medium" type="radio" name="read" value="Medium">
+              <p id="medium">Medium</p>
+            </label>
+            <label>
+              <input class="priority" id="high" type="radio" name="read" value="High">
+              <p id="high">High</p>
+            </label>
+        </div>
+
+
+        <p>Tasks:</p>
+        <div id="myProject">
+            <button id="createTaskButton">
+                <img src="./assets/plus.png" alt="Plus Button">
+            </button>
+
+            <div>
+                <label for="taskItem"></label>
+                <input type="text" name="taskItem" id="taskItem" placeholder="Enter task item here" required>
+            </div>
+        </div>
+
+        <div id="tasks">
+            <ul id="tasksUl">
+                <!-- Tasks Area -->
+            </ul>
+        </div>
+
+        <div id="buttons">
+            <button id="saveButton">Save</button>
+            <button id="clearButton">Clear Completed Tasks</button>
+            <button id="deleteButton">Delete Project</button>
+        </div>
+    </dialog>
+
+    <ul id="itemsArea">
+        <!-- Projects Area -->
+    </ul>
 
     <footer>Enrique Onaga</footer>
 </body>

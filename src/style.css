@@ -164,6 +164,11 @@ footer {
     text-align: center;
     align-self: center;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+#itemsArea {
+    gap: 15px;
 }
 
 #task {
@@ -207,4 +212,22 @@ dialog::backdrop {
     height: 40px;
     margin-left: 93px;
     margin-right: 20px;
+}
+
+.project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0eef1;
+    width: 200px;
+    height: 200px;
+    border-radius: 50px; 
+    margin: initial;
+}
+
+.detailButton {
+    background-color: white;
+    border-radius: 50px;
+    border-style: solid;
 }
