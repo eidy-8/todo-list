@@ -42,6 +42,8 @@ createTaskButton.addEventListener('click', () => {
         ul.appendChild(li);
         li.appendChild(input);
         li.appendChild(label);
+
+        document.getElementById("taskItem").value = "";
     }
 });
 
@@ -52,6 +54,7 @@ saveButton.addEventListener("click", () => {
     const priority = document.getElementsByClassName("priority");
 
     let priorityValue;
+    console.log(priorityValue);
     for (const button of priority) {
     if (button.checked) {
         priorityValue = button.value;
@@ -67,6 +70,21 @@ saveButton.addEventListener("click", () => {
     console.log(dueDate);
     console.log(priorityValue);
     console.log(myToDoItem.task);
+
+    //delete all the data inputted by the user previously
+    document.getElementById("taskItem").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("dueDate").value = "";
+    document.getElementById("dueDate").value = "";
+    for (const button of priority) {
+        button.checked = false;
+    }
+    if (document.getElementById("tasksUl")) {
+        while (document.getElementById("tasksUl").firstChild) {
+            document.getElementById("tasksUl").removeChild(document.getElementById("tasksUl").firstChild);
+        }
+    }
+    
 
     //create project block
     differId++;
