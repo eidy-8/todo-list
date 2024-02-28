@@ -26,7 +26,11 @@ form {
 #title,
 #description,
 #dueDate,
-#taskItem {
+#taskItem,
+#titleDetail,
+#descriptionDetail,
+#dueDateDetail,
+#taskItemDetail {
     font-size: 24px;
     border: none;
     -webkit-appearance: none;
@@ -62,7 +66,8 @@ input[type="radio"].priority:checked + p {
     padding: 5px; 
 }
 
-#priorityOption {
+#priorityOption,
+#priorityOptionDetail {
     display: flex;
     justify-content: center;
     list-style-type: none;
@@ -117,7 +122,11 @@ button {
 }
 
 #saveButton,
-#clearButton {
+#clearButton,
+#deleteButton,
+#saveButtonDetail,
+#clearButtonDetail,
+#deleteButtonDetail {
     background-color: #f0eef1;
     border-radius: 50px 50px 50px 50px;
     border-style: none;
@@ -125,7 +134,7 @@ button {
     height: 44px;
 }
 
-#delProjectButton {
+#deleteButtonDetail {
     background-color: #f0eef1;
     color: red;
     border-radius: 50px 50px 50px 50px;
@@ -134,7 +143,8 @@ button {
     height: 44px;
 }
 
-#closeButton {
+#closeButton,
+#closeButtonDetail {
     display: flex;
     background-color: #f0eef1;
     border-radius: 50%;
@@ -150,13 +160,15 @@ button {
     height: 30px;
 }
 
-#buttons {
+#buttons,
+#buttonsDetail {
     display: flex;
     justify-content: space-evenly;
     margin-top: 10px;
 }
 
-#myProject {
+#myProject,
+#myProjectDetail {
     display: flex;
     font-size: 40px;
     align-items: center;
@@ -165,6 +177,7 @@ button {
 
 #itemsArea,
 #myProject,
+#myProjectDetail,
 footer {
     display: flex;
     text-align: center;
@@ -208,7 +221,8 @@ dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-#projectTitle {
+#projectTitle,
+#projectTitleDetail {
     font-size: 50px;
     font-weight: bolder;
 }
