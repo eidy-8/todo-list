@@ -13,6 +13,11 @@ const toDoItem = function(id, title, description, dueDate, priority) {
 
 let toDoItemList = [];
 let differId = 0;
+let collectedTasks = [];
+//list to be copied by myToDoItem.task
+function addTask(taskItens) {
+    collectedTasks.push(taskItens);
+}
 
 //Popup logic
 const openDialogButton = document.getElementById("openDialogButton");
@@ -33,18 +38,28 @@ openDialogButton.addEventListener("click", () => {
 
 createTaskButton.addEventListener("click", () => {
     const taskItem = document.getElementById("taskItem").value;
+
     if (taskItem !== "") {
         const ul = document.getElementById("tasksUl");
         const li = document.createElement("li");
         const input = document.createElement("input");
         input.type = "checkbox";
         input.className = "tasks";
+        input.addEventListener('change', function () {
+            const taskId = "task_" + Date.now();
+            const taskStatus = this.checked;
+
+            localStorage.setItem(taskId, taskStatus);
+        });
+
         const label = document.createElement("label");
         label.textContent = taskItem;
 
         ul.appendChild(li);
         li.appendChild(input);
         li.appendChild(label);
+
+        addTask(taskItem);
 
         document.getElementById("taskItem").value = "";
     }
@@ -57,27 +72,29 @@ saveButton.addEventListener("click", () => {
     const priority = document.getElementsByClassName("priority");
 
     let priorityValue;
-    console.log(priorityValue);
     for (const button of priority) {
-    if (button.checked) {
-        priorityValue = button.value;
-        break;
-    }
+        if (button.checked) {
+            priorityValue = button.value;
+            break;
+        }
     }
 
-    //Preciso armazenar as tarefas!
-    //myToDoItem.task.push("teste");
     const myToDoItem = new toDoItem(differId, title, description, dueDate, priorityValue);
 
-    console.log(differId)
-    console.log(title);
-    console.log(description);
-    console.log(dueDate);
-    console.log(priorityValue);
-    console.log(myToDoItem.task);
+    for (let i = 0; i < collectedTasks.length; i++) {
+        myToDoItem.task.push(collectedTasks[i]);
+    }
+
+    //preciso dar um jeito de armazenar o checklist
+
+    console.log("differId: " + differId)
+    console.log("title: " + title);
+    console.log("description: " + description);
+    console.log("dueDate: " + dueDate);
+    console.log("priorityValue: " + priorityValue);
+    console.log("myToDoItem.task: " + myToDoItem.task);
 
     toDoItemList.push(myToDoItem);
-    console.log("Teste: " + toDoItemList[0].description);
 
     //delete all the data inputted by the user previously
     document.getElementById("taskItem").value = "";
@@ -91,11 +108,11 @@ saveButton.addEventListener("click", () => {
             document.getElementById("tasksUl").removeChild(document.getElementById("tasksUl").firstChild);
         }
     }
+    collectedTasks = [];
     
     differId++;
 
     //create project block
-
     const itemsArea = document.getElementById("itemsArea");
     itemsArea.innerHTML = "";
 
@@ -119,8 +136,7 @@ saveButton.addEventListener("click", () => {
             console.log("Detalhes do Projeto " + projectId);
 
             const projetoSelecionado = toDoItemList.find(item => item.id === parseInt(projectId));
-            console.log(toDoItemList.find(item => item.id === parseInt(projectId)));
-            console.log("Lista de Tarefas:", toDoItemList);
+            console.log("Lista de tasks:", toDoItemList);
             console.log("Projeto Selecionado:", projetoSelecionado);
 
             exibirDetalhesDoProjeto(projetoSelecionado);
@@ -148,11 +164,19 @@ function exibirDetalhesDoProjeto(projeto) {
     }
 
     const ul = document.getElementById("tasksUlDetail");
-    ul.innerHTML = ""; // Limpa a lista antes de adicioná-la
-    projeto.task.forEach(tarefa => {
+    ul.innerHTML = "";
+    projeto.task.forEach(task => {
         const li = document.createElement("li");
-        li.textContent = tarefa;
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.className = "tasks";
+
+        const label = document.createElement("label");
+        label.textContent = task;
+
         ul.appendChild(li);
+        li.appendChild(input);
+        li.appendChild(label);
     });
 }
 
