@@ -8,11 +8,13 @@ const toDoItem = function(id, title, description, dueDate, priority) {
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
+    this.checkList = [];
     this.task = [];
 }
 
 let toDoItemList = [];
 let differId = 0;
+let taskId = 0;
 let collectedTasks = [];
 //list to be copied by myToDoItem.task
 function addTask(taskItens) {
@@ -24,6 +26,11 @@ const openDialogButton = document.getElementById("openDialogButton");
 const createTaskButton = document.getElementById("createTaskButton");
 const saveButton = document.getElementById("saveButton");
 const closeButton = document.getElementById("closeButton");
+
+const createTaskButtonDetail = document.getElementById("createTaskButtonDetail");
+const saveButtonDetail = document.getElementById("saveButtonDetail");
+const clearButtonDetail = document.getElementById("clearButtonDetail");
+const deleteButtonDetail = document.getElementById("deleteButtonDetail");
 const closeButtonDetail = document.getElementById("closeButtonDetail");
 
 openDialogButton.addEventListener("click", () => {
@@ -45,15 +52,13 @@ createTaskButton.addEventListener("click", () => {
         const input = document.createElement("input");
         input.type = "checkbox";
         input.className = "tasks";
-        input.addEventListener('change', function () {
-            const taskId = "task_" + Date.now();
-            const taskStatus = this.checked;
-
-            localStorage.setItem(taskId, taskStatus);
-        });
+        input.id = `checkbox${taskId}`;
 
         const label = document.createElement("label");
         label.textContent = taskItem;
+        label.htmlFor = `checkbox${taskId}`;
+
+        taskId++;
 
         ul.appendChild(li);
         li.appendChild(input);
@@ -70,6 +75,8 @@ saveButton.addEventListener("click", () => {
     const description = document.getElementById("description").value;
     const dueDate = document.getElementById("dueDate").value;
     const priority = document.getElementsByClassName("priority");
+    const checkboxes = document.querySelectorAll('input[type=checkbox]');
+    let checklist = [];
 
     let priorityValue;
     for (const button of priority) {
@@ -85,7 +92,19 @@ saveButton.addEventListener("click", () => {
         myToDoItem.task.push(collectedTasks[i]);
     }
 
-    //preciso dar um jeito de armazenar o checklist
+    checkboxes.forEach((checkbox) => {
+        const checkboxId = checkbox.id;
+        const checkboxLabel = checkbox.nextElementSibling.textContent;
+        const isChecked = checkbox.checked;
+
+        checklist.push({
+            id: checkboxId,
+            label: checkboxLabel,
+            marked: isChecked,
+        });
+    });
+
+    myToDoItem.checkList = checklist;
 
     console.log("differId: " + differId)
     console.log("title: " + title);
@@ -93,6 +112,7 @@ saveButton.addEventListener("click", () => {
     console.log("dueDate: " + dueDate);
     console.log("priorityValue: " + priorityValue);
     console.log("myToDoItem.task: " + myToDoItem.task);
+    console.log("myToDoItem.checkList", myToDoItem.checkList);
 
     toDoItemList.push(myToDoItem);
 
@@ -108,6 +128,8 @@ saveButton.addEventListener("click", () => {
             document.getElementById("tasksUl").removeChild(document.getElementById("tasksUl").firstChild);
         }
     }
+    taskId = 0;
+    myToDoItem.checklist = [];
     collectedTasks = [];
     
     differId++;
@@ -119,7 +141,7 @@ saveButton.addEventListener("click", () => {
     for (let i = 0; i < toDoItemList.length; i++) {
         const li = document.createElement("li");
         li.className = "project";
-        li.id = `project${i}`; 
+        li.id = `project${i}`; // erro
         const p = document.createElement("p");
         const button = document.createElement("button");
         button.setAttribute("data-project-id", i);
@@ -131,15 +153,14 @@ saveButton.addEventListener("click", () => {
         li.appendChild(button);
 
         button.addEventListener("click", () => {
-            //beatles melhor banda
             const projectId = button.getAttribute("data-project-id");
             console.log("Detalhes do Projeto " + projectId);
 
-            const projetoSelecionado = toDoItemList.find(item => item.id === parseInt(projectId));
+            const selectedProject = toDoItemList.find(item => item.id === parseInt(projectId));
             console.log("Lista de tasks:", toDoItemList);
-            console.log("Projeto Selecionado:", projetoSelecionado);
+            console.log("Projeto Selecionado:", selectedProject);
 
-            exibirDetalhesDoProjeto(projetoSelecionado);
+            showProjectDetail(selectedProject);
             popupDetail.showModal();
         });
     }
@@ -147,7 +168,7 @@ saveButton.addEventListener("click", () => {
     popup.close();
 });
 
-function exibirDetalhesDoProjeto(projeto) {
+function showProjectDetail(projeto) {
     const dialog = document.getElementById("popupDetail");
 
     document.getElementById("projectTitleDetail").textContent = projeto.title;
@@ -165,18 +186,22 @@ function exibirDetalhesDoProjeto(projeto) {
 
     const ul = document.getElementById("tasksUlDetail");
     ul.innerHTML = "";
-    projeto.task.forEach(task => {
+    projeto.checkList.forEach((item, index) => {
         const li = document.createElement("li");
         const input = document.createElement("input");
         input.type = "checkbox";
         input.className = "tasks";
+        input.id = `checkboxDetail${index}`;
 
         const label = document.createElement("label");
-        label.textContent = task;
+        label.textContent = item.label;
+        label.htmlFor = `checkboxDetail${index}`;
 
         ul.appendChild(li);
         li.appendChild(input);
         li.appendChild(label);
+
+        input.checked = item.marked;
     });
 }
 
@@ -196,11 +221,122 @@ closeButton.addEventListener("click", () => {
     popup.close();
 });
 
-closeButtonDetail.addEventListener("click", () => {
+document.getElementById("dueDate").min = new Date().toISOString().split("T")[0];
+
+//detail screen logic
+
+createTaskButtonDetail.addEventListener("click", () => {
+    const taskItemDetail = document.getElementById("taskItemDetail").value;
+
+    if (taskItemDetail !== "") {
+        const ulDetail = document.getElementById("tasksUlDetail");
+        const liDetail = document.createElement("li");
+        const inputDetail = document.createElement("input");
+        inputDetail.type = "checkbox";
+        inputDetail.className = "tasks";
+        inputDetail.id = `checkboxDetail${taskId}`;
+
+        const labelDetail = document.createElement("label");
+        labelDetail.textContent = taskItemDetail;
+        labelDetail.htmlFor = `checkboxDetail${taskId}`;
+
+        taskId++;
+
+        ulDetail.appendChild(liDetail);
+        liDetail.appendChild(inputDetail);
+        liDetail.appendChild(labelDetail);
+
+        const projectId = document.getElementById("projectTitleDetail").textContent;
+        const selectedProject = toDoItemList.find(item => item.title === projectId);
+
+        if (selectedProject) {
+            selectedProject.task.push(taskItemDetail);
+        }
+
+        document.getElementById("taskItemDetail").value = "";
+    }
+});
+
+clearButtonDetail.addEventListener("click", () => {
+    const projectId = document.getElementById("projectTitleDetail").textContent;
+    const selectedProject = toDoItemList.find(item => item.title === projectId);
+
+    if (selectedProject) {
+        const checkboxesDetail = document.querySelectorAll('#tasksUlDetail input[type=checkbox]:checked');
+        
+        checkboxesDetail.forEach((checkbox) => {
+            const checkboxId = checkbox.id;
+            const checkboxLabel = checkbox.nextElementSibling.textContent;
+
+            const taskIndex = selectedProject.task.indexOf(checkboxLabel);
+            if (taskIndex !== -1) {
+                selectedProject.task.splice(taskIndex, 1);
+            }
+
+            const liDetail = checkbox.parentElement;
+            liDetail.remove();
+        });
+    }
+});
+
+deleteButtonDetail.addEventListener("click", () => {
+    const projectId = document.getElementById("projectTitleDetail").textContent;
+    const selectedProjectIndex = toDoItemList.findIndex(item => item.title === projectId);
+
+    if (selectedProjectIndex !== -1) {
+        // Remove o projeto do toDoItemList
+        toDoItemList.splice(selectedProjectIndex, 1);
+
+        // Remove o bloco div correspondente na tela principal (itemsArea)
+        const projectBlocks = document.querySelectorAll(".project");
+        projectBlocks.forEach((block, index) => {
+            if (index === selectedProjectIndex) {
+                block.remove();
+            }
+        });
+
+        // Fecha o diálogo de detalhes
+        popupDetail.close();
+    }
+});
+
+
+
+saveButtonDetail.addEventListener("click", () => {
+    const projectId = document.getElementById("projectTitleDetail").textContent;
+    const selectedProject = toDoItemList.find(item => item.title === projectId);
+
+    if (selectedProject) {
+        selectedProject.description = document.getElementById("descriptionDetail").value;
+        selectedProject.dueDate = document.getElementById("dueDateDetail").value;
+
+        const priorityOptions = document.querySelectorAll("#priorityOptionDetail input[type=radio]");
+        for (const option of priorityOptions) {
+            if (option.checked) {
+                selectedProject.priority = option.value;
+                break;
+            }
+        }
+
+        const checkboxes = document.querySelectorAll('#tasksUlDetail input[type=checkbox]');
+        selectedProject.checkList = [];
+        checkboxes.forEach((checkbox, index) => {
+            const checkboxLabel = checkbox.nextElementSibling.textContent;
+            const isChecked = checkbox.checked;
+
+            selectedProject.checkList.push({
+                id: `checkboxDetail${index}`,
+                label: checkboxLabel,
+                marked: isChecked,
+            });
+        });
+
+        console.log("Projeto Atualizado:", selectedProject);
+    }
+
     popupDetail.close();
 });
 
-//popupDetails logic
-
-
-document.getElementById("dueDate").min = new Date().toISOString().split("T")[0];
+closeButtonDetail.addEventListener("click", () => {
+    popupDetail.close();
+});
