@@ -33,7 +33,16 @@ const clearButtonDetail = document.getElementById("clearButtonDetail");
 const deleteButtonDetail = document.getElementById("deleteButtonDetail");
 const closeButtonDetail = document.getElementById("closeButtonDetail");
 
-openDialogButton.addEventListener("click", () => {
+openDialogButton.addEventListener("click", updateProjectTitle);
+
+document.addEventListener("keydown", (event) => {
+    if (event.keyCode === 13 || event.key === "Enter") {
+        event.preventDefault();
+        updateProjectTitle();
+    }
+});
+
+function updateProjectTitle() {
     const title = document.getElementById("title").value;
     if (title !== "") {
         const projectTitle = document.getElementById("projectTitle");
@@ -41,9 +50,18 @@ openDialogButton.addEventListener("click", () => {
         popup.showModal();
         document.getElementById("title").value = "";
     }
+}
+
+createTaskButton.addEventListener("click", updateProjectTask)
+
+document.addEventListener("keydown", (event) => {
+    if (event.keyCode === 13 || event.key === "Enter") {
+        event.preventDefault();
+        updateProjectTask();
+    }
 });
 
-createTaskButton.addEventListener("click", () => {
+function updateProjectTask() {
     const taskItem = document.getElementById("taskItem").value;
 
     if (taskItem !== "") {
@@ -68,7 +86,7 @@ createTaskButton.addEventListener("click", () => {
 
         document.getElementById("taskItem").value = "";
     }
-});
+}
 
 saveButton.addEventListener("click", () => {
     const title = document.getElementById("projectTitle").textContent;
@@ -131,39 +149,38 @@ saveButton.addEventListener("click", () => {
     taskId = 0;
     myToDoItem.checklist = [];
     collectedTasks = [];
-    
-    differId++;
 
     //create project block
     const itemsArea = document.getElementById("itemsArea");
-    itemsArea.innerHTML = "";
 
-    for (let i = 0; i < toDoItemList.length; i++) {
-        const li = document.createElement("li");
-        li.className = "project";
-        li.id = `project${i}`; // erro
-        const p = document.createElement("p");
-        const button = document.createElement("button");
-        button.setAttribute("data-project-id", i);
-        button.className = "detailButton";
-        button.textContent = "Details";
-        itemsArea.appendChild(li);
-        li.appendChild(p);
-        p.textContent = toDoItemList[i].title;
-        li.appendChild(button);
+    const li = document.createElement("li");
+    li.className = "project";
 
-        button.addEventListener("click", () => {
-            const projectId = button.getAttribute("data-project-id");
-            console.log("Detalhes do Projeto " + projectId);
+    li.id = `project${differId}`; // erro
+    
+    const p = document.createElement("p");
+    const button = document.createElement("button");
+    button.setAttribute("data-project-id", differId);
+    button.className = "detailButton";
+    button.textContent = "Details";
+    itemsArea.appendChild(li);
+    li.appendChild(p);
+    p.textContent = toDoItemList[differId].title;
+    li.appendChild(button);
 
-            const selectedProject = toDoItemList.find(item => item.id === parseInt(projectId));
-            console.log("Lista de tasks:", toDoItemList);
-            console.log("Projeto Selecionado:", selectedProject);
+    differId++;
 
-            showProjectDetail(selectedProject);
-            popupDetail.showModal();
-        });
-    }
+    button.addEventListener("click", () => {
+        const projectId = button.getAttribute("data-project-id");
+        console.log("Detalhes do Projeto " + projectId);
+
+        const selectedProject = toDoItemList.find(item => item.id === parseInt(projectId));
+        console.log("Lista de tasks:", toDoItemList);
+        console.log("Projeto Selecionado:", selectedProject);
+
+        showProjectDetail(selectedProject);
+        popupDetail.showModal();
+    });
 
     popup.close();
 });
@@ -171,7 +188,7 @@ saveButton.addEventListener("click", () => {
 function showProjectDetail(projeto) {
     const dialog = document.getElementById("popupDetail");
 
-    document.getElementById("projectTitleDetail").textContent = projeto.title;
+    document.getElementById("projectTitleDetail").textContent = projeto.title; //o erro
     document.getElementById("descriptionDetail").value = projeto.description;
     document.getElementById("dueDateDetail").value = projeto.dueDate;
 
@@ -225,7 +242,16 @@ document.getElementById("dueDate").min = new Date().toISOString().split("T")[0];
 
 //detail screen logic
 
-createTaskButtonDetail.addEventListener("click", () => {
+createTaskButtonDetail.addEventListener("click", updateProjectTaskDetail);
+
+document.addEventListener("keydown", (event) => {
+    if (event.keyCode === 13 || event.key === "Enter") {
+        event.preventDefault();
+        updateProjectTaskDetail();
+    }
+});
+
+function updateProjectTaskDetail() {
     const taskItemDetail = document.getElementById("taskItemDetail").value;
 
     if (taskItemDetail !== "") {
@@ -255,7 +281,7 @@ createTaskButtonDetail.addEventListener("click", () => {
 
         document.getElementById("taskItemDetail").value = "";
     }
-});
+}
 
 clearButtonDetail.addEventListener("click", () => {
     const projectId = document.getElementById("projectTitleDetail").textContent;
@@ -280,26 +306,29 @@ clearButtonDetail.addEventListener("click", () => {
 });
 
 deleteButtonDetail.addEventListener("click", () => {
-    const projectId = document.getElementById("projectTitleDetail").textContent;
-    const selectedProjectIndex = toDoItemList.findIndex(item => item.title === projectId);
+    // Exibe uma caixa de diálogo de confirmação
+    const confirmation = confirm("Are you sure you want to delete this project?");
 
-    if (selectedProjectIndex !== -1) {
-        // Remove o projeto do toDoItemList
-        toDoItemList.splice(selectedProjectIndex, 1);
+    // Verifica se o usuário confirmou
+    if (confirmation) {
+        const projectId = document.getElementById("projectTitleDetail").textContent;
+        const selectedProjectIndex = toDoItemList.findIndex(item => item.title === projectId);
 
-        // Remove o bloco div correspondente na tela principal (itemsArea)
-        const projectBlocks = document.querySelectorAll(".project");
-        projectBlocks.forEach((block, index) => {
-            if (index === selectedProjectIndex) {
-                block.remove();
-            }
-        });
+        console.log(selectedProjectIndex);
 
-        // Fecha o diálogo de detalhes
-        popupDetail.close();
+        if (selectedProjectIndex !== -1) {
+            // Remove o projeto do toDoItemList
+            toDoItemList.splice(selectedProjectIndex, 1, "deleted");
+
+            // Remove o bloco div correspondente na tela principal (itemsArea)
+            const projectBlocks = document.getElementById("itemsArea");
+            var divToRemove = document.getElementById(`project${selectedProjectIndex}`);
+            divToRemove.parentNode.removeChild(divToRemove);
+
+            popupDetail.close();
+        }
     }
 });
-
 
 
 saveButtonDetail.addEventListener("click", () => {
